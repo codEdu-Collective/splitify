@@ -11,6 +11,8 @@
         "write": "prettier . --write"
     },
     "dependencies": {
+        "@clerk/nextjs": "^6.19.3",
+        "convex": "^1.24.1",
         "@radix-ui/react-avatar": "^1.1.9",
         "@radix-ui/react-dialog": "^1.1.13",
         "@radix-ui/react-label": "^2.1.6",

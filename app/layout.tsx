@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { ConvexClientProvider } from '@/components/convex-client-provider';
+import { ClerkProvider } from '@clerk/nextjs';
 import Header from '@/components/header';
 
 const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
     title: 'Split Smart App',
     description:
-        'Split Smart is your all-in-one solution for effortless expense management and fair cost splitting'
+        'Split Smart is your all-in-one solution for effortless expense management and fair cost splitting',
 };
 
 export default function RootLayout({
@@ -21,8 +23,12 @@ export default function RootLayout({
                 <link rel="icon" href="../public/logos/logo1.jpeg" sizes="any" />
             </head>
             <body className={`${inter.className}`}>
-                <Header />
-                <main className="min-h-screen">{children}</main>
+                <ClerkProvider>
+                    <ConvexClientProvider>
+                        <Header />
+                        <main className="min-h-screen">{children}</main>
+                    </ConvexClientProvider>
+                </ClerkProvider>
             </body>
         </html>
     );

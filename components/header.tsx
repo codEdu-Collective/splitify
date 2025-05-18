@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Button } from './ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
@@ -20,7 +19,7 @@ export default function Header() {
             <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2">
                     <Image
-                        src={'/logos/logo1.jpeg'}
+                        src={'/logos/logo.png'}
                         alt="Split Smart Logo"
                         width={200}
                         height={60}

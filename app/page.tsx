@@ -2,10 +2,10 @@ import { Button } from '@/components/ui/button';
 
 export default function Home() {
     return (
-        <div>
+        <div className="pt-16">
             Split Smart App
             <br />
-            <Button></Button>
+            <Button variant={'destructive'}>Subscribse</Button>
         </div>
     );
 }

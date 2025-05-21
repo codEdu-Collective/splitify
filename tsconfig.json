@@ -29,6 +29,6 @@
         "**/*.tsx",
         ".next/types/**/*.ts",
         "components/convex-client-provider.jsx"
-    ],
+, "convex/seed.js"    ],
     "exclude": ["node_modules"]
 }

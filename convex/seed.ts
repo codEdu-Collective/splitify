@@ -1,4 +1,7 @@
 // convex/seed.js
+
+import type { GenericMutationCtx } from "convex/server";
+import { GenericId } from "convex/values";
 import { mutation } from "./_generated/server";
 
 /**
@@ -63,8 +66,8 @@ export const seedDatabase = mutation({
 });
 
 // Helper to create groups
-async function createGroups(ctx, users) {
-  const now = Date.now();
+async function createGroups(ctx: GenericMutationCtx<{ expenses: { document: { _id: GenericId<"expenses">; _creationTime: number; category?: string | undefined; groupId?: GenericId<"groups"> | undefined; description: string; amount: number; date: number; paidByUserId: GenericId<"users">; splitType: string; splits: { amount: number; userId: GenericId<"users">; paid: boolean; }[]; createdBy: GenericId<"users">; }; fieldPaths: "_id" | ("_creationTime" | "description" | "amount" | "category" | "date" | "paidByUserId" | "splitType" | "splits" | "groupId" | "createdBy"); indexes: { by_group: ["groupId", "_creationTime"]; by_user_and_group: ["paidByUserId", "groupId", "_creationTime"]; by_date: ["date", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; users: { document: { _id: GenericId<"users">; _creationTime: number; imageUrl?: string | undefined; name: string; email: string; tokenIdentifier: string; }; fieldPaths: "_id" | ("name" | "email" | "tokenIdentifier" | "imageUrl" | "_creationTime"); indexes: { by_token: ["tokenIdentifier", "_creationTime"]; by_email: ["email", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: { search_name: { searchField: "name"; filterFields: never; }; search_email: { searchField: "email"; filterFields: never; }; }; vectorIndexes: {}; }; groups: { document: { _id: GenericId<"groups">; _creationTime: number; description?: string | undefined; name: string; createdBy: GenericId<"users">; members: { userId: GenericId<"users">; role: string; joinedAt: number; }[]; }; fieldPaths: "_id" | ("name" | "_creationTime" | "description" | "createdBy" | "members"); indexes: { by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; settlements: { document: { _id: GenericId<"settlements">; _creationTime: number; groupId?: GenericId<"groups"> | undefined; note?: string | undefined; relatedExpenseIds?: GenericId<"expenses">[] | undefined; amount: number; date: number; paidByUserId: GenericId<"users">; createdBy: GenericId<"users">; receivedByUserId: GenericId<"users">; }; fieldPaths: "_id" | ("_creationTime" | "amount" | "date" | "paidByUserId" | "groupId" | "createdBy" | "note" | "receivedByUserId" | "relatedExpenseIds"); indexes: { by_group: ["groupId", "_creationTime"]; by_user_and_group: ["paidByUserId", "groupId", "_creationTime"]; by_receiver_and_group: ["receivedByUserId", "groupId", "_creationTime"]; by_date: ["date", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; }>, users: any[]) {
+  const now = Date.now(); 
 
   // Using the users from your database
   const user1 = users[0]; 
@@ -119,7 +122,7 @@ async function createGroups(ctx, users) {
 }
 
 // Helper to create one-on-one expenses
-async function createOneOnOneExpenses(ctx, users) {
+async function createOneOnOneExpenses(ctx: GenericMutationCtx<{ expenses: { document: { _id: GenericId<"expenses">; _creationTime: number; category?: string | undefined; groupId?: GenericId<"groups"> | undefined; description: string; amount: number; date: number; paidByUserId: GenericId<"users">; splitType: string; splits: { amount: number; userId: GenericId<"users">; paid: boolean; }[]; createdBy: GenericId<"users">; }; fieldPaths: "_id" | ("_creationTime" | "description" | "amount" | "category" | "date" | "paidByUserId" | "splitType" | "splits" | "groupId" | "createdBy"); indexes: { by_group: ["groupId", "_creationTime"]; by_user_and_group: ["paidByUserId", "groupId", "_creationTime"]; by_date: ["date", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; users: { document: { _id: GenericId<"users">; _creationTime: number; imageUrl?: string | undefined; name: string; email: string; tokenIdentifier: string; }; fieldPaths: "_id" | ("name" | "email" | "tokenIdentifier" | "imageUrl" | "_creationTime"); indexes: { by_token: ["tokenIdentifier", "_creationTime"]; by_email: ["email", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: { search_name: { searchField: "name"; filterFields: never; }; search_email: { searchField: "email"; filterFields: never; }; }; vectorIndexes: {}; }; groups: { document: { _id: GenericId<"groups">; _creationTime: number; description?: string | undefined; name: string; createdBy: GenericId<"users">; members: { userId: GenericId<"users">; role: string; joinedAt: number; }[]; }; fieldPaths: "_id" | ("name" | "_creationTime" | "description" | "createdBy" | "members"); indexes: { by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; settlements: { document: { _id: GenericId<"settlements">; _creationTime: number; groupId?: GenericId<"groups"> | undefined; note?: string | undefined; relatedExpenseIds?: GenericId<"expenses">[] | undefined; amount: number; date: number; paidByUserId: GenericId<"users">; createdBy: GenericId<"users">; receivedByUserId: GenericId<"users">; }; fieldPaths: "_id" | ("_creationTime" | "amount" | "date" | "paidByUserId" | "groupId" | "createdBy" | "note" | "receivedByUserId" | "relatedExpenseIds"); indexes: { by_group: ["groupId", "_creationTime"]; by_user_and_group: ["paidByUserId", "groupId", "_creationTime"]; by_receiver_and_group: ["receivedByUserId", "groupId", "_creationTime"]; by_date: ["date", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; }>, users: any[]) {
   const now = Date.now();
   const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
   const twoWeeksAgo = now - 14 * 24 * 60 * 60 * 1000;
@@ -214,7 +217,7 @@ async function createOneOnOneExpenses(ctx, users) {
 }
 
 // Helper to create group expenses
-async function createGroupExpenses(ctx, users, groups) {
+async function createGroupExpenses(ctx: GenericMutationCtx<{ expenses: { document: { _id: GenericId<"expenses">; _creationTime: number; category?: string | undefined; groupId?: GenericId<"groups"> | undefined; description: string; amount: number; date: number; paidByUserId: GenericId<"users">; splitType: string; splits: { amount: number; userId: GenericId<"users">; paid: boolean; }[]; createdBy: GenericId<"users">; }; fieldPaths: "_id" | ("_creationTime" | "description" | "amount" | "category" | "date" | "paidByUserId" | "splitType" | "splits" | "groupId" | "createdBy"); indexes: { by_group: ["groupId", "_creationTime"]; by_user_and_group: ["paidByUserId", "groupId", "_creationTime"]; by_date: ["date", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; users: { document: { _id: GenericId<"users">; _creationTime: number; imageUrl?: string | undefined; name: string; email: string; tokenIdentifier: string; }; fieldPaths: "_id" | ("name" | "email" | "tokenIdentifier" | "imageUrl" | "_creationTime"); indexes: { by_token: ["tokenIdentifier", "_creationTime"]; by_email: ["email", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: { search_name: { searchField: "name"; filterFields: never; }; search_email: { searchField: "email"; filterFields: never; }; }; vectorIndexes: {}; }; groups: { document: { _id: GenericId<"groups">; _creationTime: number; description?: string | undefined; name: string; createdBy: GenericId<"users">; members: { userId: GenericId<"users">; role: string; joinedAt: number; }[]; }; fieldPaths: "_id" | ("name" | "_creationTime" | "description" | "createdBy" | "members"); indexes: { by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; settlements: { document: { _id: GenericId<"settlements">; _creationTime: number; groupId?: GenericId<"groups"> | undefined; note?: string | undefined; relatedExpenseIds?: GenericId<"expenses">[] | undefined; amount: number; date: number; paidByUserId: GenericId<"users">; createdBy: GenericId<"users">; receivedByUserId: GenericId<"users">; }; fieldPaths: "_id" | ("_creationTime" | "amount" | "date" | "paidByUserId" | "groupId" | "createdBy" | "note" | "receivedByUserId" | "relatedExpenseIds"); indexes: { by_group: ["groupId", "_creationTime"]; by_user_and_group: ["paidByUserId", "groupId", "_creationTime"]; by_receiver_and_group: ["receivedByUserId", "groupId", "_creationTime"]; by_date: ["date", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; }>, users: any[], groups: any[]) {
   const now = Date.now();
   const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
   const twoWeeksAgo = now - 14 * 24 * 60 * 60 * 1000;
@@ -378,11 +381,11 @@ async function createGroupExpenses(ctx, users, groups) {
 
 // Helper to create settlements
 async function createSettlements(
-  ctx,
-  users,
-  groups,
-  oneOnOneExpenses,
-  groupExpenses
+  ctx: GenericMutationCtx<{ expenses: { document: { _id: GenericId<"expenses">; _creationTime: number; category?: string | undefined; groupId?: GenericId<"groups"> | undefined; description: string; amount: number; date: number; paidByUserId: GenericId<"users">; splitType: string; splits: { amount: number; userId: GenericId<"users">; paid: boolean; }[]; createdBy: GenericId<"users">; }; fieldPaths: "_id" | ("_creationTime" | "description" | "amount" | "category" | "date" | "paidByUserId" | "splitType" | "splits" | "groupId" | "createdBy"); indexes: { by_group: ["groupId", "_creationTime"]; by_user_and_group: ["paidByUserId", "groupId", "_creationTime"]; by_date: ["date", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; users: { document: { _id: GenericId<"users">; _creationTime: number; imageUrl?: string | undefined; name: string; email: string; tokenIdentifier: string; }; fieldPaths: "_id" | ("name" | "email" | "tokenIdentifier" | "imageUrl" | "_creationTime"); indexes: { by_token: ["tokenIdentifier", "_creationTime"]; by_email: ["email", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: { search_name: { searchField: "name"; filterFields: never; }; search_email: { searchField: "email"; filterFields: never; }; }; vectorIndexes: {}; }; groups: { document: { _id: GenericId<"groups">; _creationTime: number; description?: string | undefined; name: string; createdBy: GenericId<"users">; members: { userId: GenericId<"users">; role: string; joinedAt: number; }[]; }; fieldPaths: "_id" | ("name" | "_creationTime" | "description" | "createdBy" | "members"); indexes: { by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; settlements: { document: { _id: GenericId<"settlements">; _creationTime: number; groupId?: GenericId<"groups"> | undefined; note?: string | undefined; relatedExpenseIds?: GenericId<"expenses">[] | undefined; amount: number; date: number; paidByUserId: GenericId<"users">; createdBy: GenericId<"users">; receivedByUserId: GenericId<"users">; }; fieldPaths: "_id" | ("_creationTime" | "amount" | "date" | "paidByUserId" | "groupId" | "createdBy" | "note" | "receivedByUserId" | "relatedExpenseIds"); indexes: { by_group: ["groupId", "_creationTime"]; by_user_and_group: ["paidByUserId", "groupId", "_creationTime"]; by_receiver_and_group: ["receivedByUserId", "groupId", "_creationTime"]; by_date: ["date", "_creationTime"]; by_id: ["_id"]; by_creation_time: ["_creationTime"]; }; searchIndexes: {}; vectorIndexes: {}; }; }>,
+  users: any[],
+  groups: any[],
+  oneOnOneExpenses: any[],
+  groupExpenses: any[]
 ) {
   const now = Date.now();
   const threeDaysAgo = now - 3 * 24 * 60 * 60 * 1000;
@@ -395,16 +398,16 @@ async function createSettlements(
 
   // Find a one-on-one expense to settle
   const cabExpense = oneOnOneExpenses.find(
-    (expense) => expense.description === "Cab ride to airport"
+    (expense: { description: string; }) => expense.description === "Cab ride to airport"
   );
 
   // Find some group expenses to settle
   const hotelExpense = groupExpenses.find(
-    (expense) => expense.description === "Hotel reservation"
+    (expense: { description: string; }) => expense.description === "Hotel reservation"
   );
 
   const coffeeExpense = groupExpenses.find(
-    (expense) => expense.description === "Coffee and snacks"
+    (expense: { description: string; }) => expense.description === "Coffee and snacks"
   );
 
   const settlementDatas = [

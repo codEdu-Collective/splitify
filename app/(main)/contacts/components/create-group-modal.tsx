@@ -1,56 +1,55 @@
+'use client';
+
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { api } from '@/convex/_generated/api';
+import { useConvexMutation, useConvexQuery } from '@/hooks/use-convex-query';
+import { toast } from 'sonner';
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogFooter,
 } from '@/components/ui/dialog';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useConvexQuery } from '@/hooks/use-convex-query';
-import { api } from '@/convex/_generated/api';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useState } from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { UserPlus } from 'lucide-react';
-import { Command, CommandInput, CommandList } from '@/components/ui/command';
-import { CommandEmpty, CommandGroup, CommandItem, CommandSeparator } from 'cmdk';
-
-type CreateGroupModalProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    onSuccess: (groupId: string) => void;
-};
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { X, UserPlus } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const groupSchema = z.object({
     name: z.string().min(1, 'Group name is required'),
     description: z.string().optional(),
 });
 
-type User = {
-    id: string;
-    name?: string;
-    imageUrl?: string;
-    email?: string;
-};
-
-const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose, onSuccess }) => {
+export function CreateGroupModal({ isOpen, onClose, onSuccess }: CreateGroupModalProps) {
     const [selectedMembers, setSelectedMembers] = useState<User[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [commandOpen, setCommandOpen] = useState(false);
 
-    const { data: currentUser } = useConvexQuery<User, unknown>(api.users.getCurrentUser);
+    const { data } = useConvexQuery(api.users.getCurrentUser);
+    const currentUser = data as User | undefined;
 
-    const { data: searchResults, isLoading: isSearching } = useConvexQuery<User[]>(
+    const createGroup = useConvexMutation(api.contacts.createGroup);
+    const { data: searchResults = [], isLoading: isSearching } = useConvexQuery<User[]>(
         api.users.searchUsers,
-        { query: searchQuery },
+        {
+            query: searchQuery,
+        },
     );
 
     const {
@@ -66,55 +65,58 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose, on
         },
     });
 
-  const addMember = (user: User) => {
-    if (!selectedMembers.some((m) => m.id === user.id)) {
-      setSelectedMembers([...selectedMembers, user]);
-    }
-    setCommandOpen(false);
-  };
+    const addMember = (user: User) => {
+        if (!selectedMembers.some(m => m.id === user.id)) {
+            setSelectedMembers([...selectedMembers, user]);
+        }
+        setCommandOpen(false);
+    };
+
+    const removeMember = (userId: string) => {
+        setSelectedMembers(selectedMembers.filter(m => m.id !== userId));
+    };
+
+    const onSubmit = async (data: { name: string; description?: string }) => {
+        try {
+            const memberIds = selectedMembers.map(member => member.id);
+
+            const groupId = await createGroup.mutate({
+                name: data.name,
+                description: data.description,
+                members: memberIds,
+            });
+
+            toast.success('Group created successfully!');
+            reset();
+            setSelectedMembers([]);
+            onClose();
+
+            if (onSuccess) {
+                onSuccess(groupId as string);
+            }
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            toast.error('Failed to create group: ' + errorMessage);
+        }
+    };
 
     const handleClose = () => {
         reset();
         setSelectedMembers([]);
-        setSearchQuery('');
         onClose();
-    };
-
-    const onSubmit = async (data: z.infer<typeof groupSchema>) => {
-        if (!currentUser) return;
-
-        try {
-            const groupId = await api.groups.createGroup.mutate({
-                name: data.name,
-                description: data.description,
-                memberIds: [currentUser.id, ...selectedMembers.map(m => m.id)],
-            });
-            onSuccess(groupId);
-            reset();
-            setSelectedMembers([]);
-            setSearchQuery('');
-            onClose();
-        } catch (error) {
-            console.error('Group creation failed', error);
-            // İstersen burada kullanıcıya hata mesajı gösterebilirsin.
-        }
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent>
+            <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>Create New Group</DialogTitle>
-                    <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account and
-                        remove your data from our servers.
-                    </DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="name">Group Name</Label>
-                        <Input id="name" placeholder="Enter a group name" {...register('name')} />
+                        <Input id="name" placeholder="Enter group name" {...register('name')} />
                         {errors.name && (
                             <p className="text-sm text-red-500">{errors.name.message}</p>
                         )}
@@ -124,7 +126,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose, on
                         <Label htmlFor="description">Description (Optional)</Label>
                         <Textarea
                             id="description"
-                            placeholder="Enter a group description"
+                            placeholder="Enter group description"
                             {...register('description')}
                         />
                     </div>
@@ -134,7 +136,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose, on
                         <div className="flex flex-wrap gap-2 mb-2">
                             {currentUser && (
                                 <Badge variant="secondary" className="px-3 py-1">
-                                    <Avatar>
+                                    <Avatar className="h-5 w-5 mr-2">
                                         <AvatarImage src={currentUser.imageUrl} />
                                         <AvatarFallback>
                                             {currentUser.name?.charAt(0) || '?'}
@@ -145,23 +147,21 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose, on
                             )}
 
                             {selectedMembers.map(member => (
-                                <Badge
-                                    key={member.id}
-                                    className="px-3 py-1 cursor-pointer"
-                                    onClick={() =>
-                                        setSelectedMembers(prev =>
-                                            prev.filter(m => m.id !== member.id),
-                                        )
-                                    }
-                                    variant="secondary"
-                                >
-                                    <Avatar>
+                                <Badge key={member.id} variant="secondary" className="px-3 py-1">
+                                    <Avatar className="h-5 w-5 mr-2">
                                         <AvatarImage src={member.imageUrl} />
                                         <AvatarFallback>
                                             {member.name?.charAt(0) || '?'}
                                         </AvatarFallback>
                                     </Avatar>
                                     <span>{member.name}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeMember(member.id)}
+                                        className="ml-2 text-muted-foreground hover:text-foreground"
+                                    >
+                                        <X className="h-3 w-3" />
+                                    </button>
                                 </Badge>
                             ))}
 
@@ -201,10 +201,10 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose, on
                                                 )}
                                             </CommandEmpty>
                                             <CommandGroup heading="Users">
-                                                {searchResults?.map(user => (
+                                                {searchResults?.map((user: User) => (
                                                     <CommandItem
                                                         key={user.id}
-                                                        value={user.name + (user.email ?? '')}
+                                                        value={user.name + user.email}
                                                         onSelect={() => addMember(user)}
                                                     >
                                                         <div className="flex items-center gap-2">
@@ -237,6 +237,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose, on
                             </p>
                         )}
                     </div>
+
                     <DialogFooter>
                         <Button type="button" variant="outline" onClick={handleClose}>
                             Cancel
@@ -252,8 +253,4 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose, on
             </DialogContent>
         </Dialog>
     );
-};
-
-export default CreateGroupModal;
-
-
+}

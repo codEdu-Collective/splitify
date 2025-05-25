@@ -58,10 +58,17 @@ function Calendar({
                 ...classNames,
             }}
             components={{
-                IconLeft: ({ className, ...props }) => (
+                // @ts-expect-error: ToDO
+                IconLeft: ({
+                    className,
+                    ...props
+                }: React.SVGProps<SVGSVGElement> & { className?: string }) => (
                     <ChevronLeft className={cn('size-4', className)} {...props} />
                 ),
-                IconRight: ({ className, ...props }) => (
+                IconRight: ({
+                    className,
+                    ...props
+                }: React.SVGProps<SVGSVGElement> & { className?: string }) => (
                     <ChevronRight className={cn('size-4', className)} {...props} />
                 ),
             }}

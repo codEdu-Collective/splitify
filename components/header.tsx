@@ -1,14 +1,15 @@
 'use client';
 
+import React from 'react';
 import { Button } from './ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import { SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import { useStoreUser } from '@/hooks/use-store-user';
 import { BarLoader } from 'react-spinners';
 import { Authenticated, Unauthenticated } from 'convex/react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useStoreUser } from '@/hooks/use-store-user';
 
 export default function Header() {
     const { isLoading } = useStoreUser();
@@ -59,7 +60,16 @@ export default function Header() {
                             </Button>
                         </Link>
 
-                        <UserButton />
+                        <UserButton
+                            appearance={{
+                                elements: {
+                                    avatarBox: 'w-10 h-10',
+                                    userButtonPopoverCard: 'shadow-xl',
+                                    userPreviewMainIdentifier: 'font-semibold',
+                                },
+                            }}
+                            afterSignOutUrl="/"
+                        />
                     </Authenticated>
 
                     <Unauthenticated>

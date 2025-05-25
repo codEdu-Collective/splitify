@@ -1,10 +1,12 @@
 import { mutation, type MutationCtx, query, type QueryCtx } from './_generated/server';
-import { internal } from './_generated/api';
+// import * as internal from './_generated/api';
 import { Doc } from './_generated/dataModel';
 import type { Id } from './_generated/dataModel';
 import { v } from 'convex/values';
+import { internal } from './_generated/api';
 
 export const getAllContacts = query({
+    args: {},
     handler: async (
         ctx: QueryCtx,
     ): Promise<{

@@ -21,9 +21,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                <link rel="icon" href="./public/logos/logo.png" sizes="any" />
+                <link rel="icon" href="/logos/logo.png" sizes="any" />
             </head>
-            <body className={`${inter.className}`}>
+            <body className={inter.className} suppressHydrationWarning={true}>
                 <ClerkProvider>
                     <ConvexClientProvider>
                         <Header />
@@ -37,3 +37,5 @@ export default function RootLayout({
         </html>
     );
 }
+
+//? SOLVE: bazı eski sürümlerde inter.className sunucu ve istemcide farklı çıkabiliyor. className'i doğrudan html elementine ver: <html lang="en" className={inter.className}></html>

@@ -9,6 +9,8 @@ import { Plus, User, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import { BarLoader } from 'react-spinners';
 import Link from 'next/link';
+import CreateGroupModal from './_components/create-group-modal';
+import { useRouter } from 'next/navigation';
 
 type UserType = {
     imageUrl: string | Blob | undefined;
@@ -37,6 +39,8 @@ const ContactsPage: React.FC = () => {
 
     const safeData = data || { users: [], groups: [] };
     const { users, groups } = safeData;
+
+    const router = useRouter();
 
     if (isLoading) {
         return (
@@ -140,6 +144,11 @@ const ContactsPage: React.FC = () => {
                     )}
                 </div>
             </div>
+            <CreateGroupModal
+                isOpen={isCreateGroupModelOpen}
+                onClose={() => setIsCreateGroupModelOpen(false)}
+                onSuccess={(groupId: string) => router.push(`/groups/${groupId}`)}
+            />
         </div>
     );
 };

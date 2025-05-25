@@ -8,10 +8,10 @@ import { BarLoader } from 'react-spinners';
 import { Authenticated, Unauthenticated } from 'convex/react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useStoreUserEffect } from '@/hooks/use-store-user';
+import { useStoreUser } from '@/hooks/use-store-user';
 
 export default function Header() {
-    const { isLoading } = useStoreUserEffect();
+    const { isLoading } = useStoreUser();
     const path = usePathname();
 
     return (

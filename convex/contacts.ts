@@ -100,7 +100,7 @@ export const createGroup = mutation({
     args: {
         name: v.string(),
         home: v.string(),
-        descripton: v.optional(v.string()),
+        description: v.optional(v.string()),
         members: v.array(v.id('users')),
     },
     handler: async (
@@ -108,7 +108,7 @@ export const createGroup = mutation({
         args: {
             name: string;
             home: string;
-            descripton: string;
+            description: string;
             members: Id<'users'>[];
         },
     ): Promise<Id<'groups'>> => {
@@ -126,7 +126,7 @@ export const createGroup = mutation({
         }
         return await ctx.db.insert('groups', {
             name: args.name.trim(),
-            description: args.descripton?.trim() ?? '',
+            description: args.description?.trim() ?? '',
             createdBy: currentUser._id,
             members: [...uniqueMembers].map(id => ({
                 userId: id,

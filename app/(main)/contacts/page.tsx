@@ -139,9 +139,9 @@ export default function ContactsPage() {
             <CreateGroupModal
                 isOpen={isCreateGroupModalOpen}
                 onClose={() => setIsCreateGroupModalOpen(false)}
-                onSuccess={groupId => {
-                    router.push(`/groups/${groupId}`);
-                }}
+                // onSuccess={groupId => {
+                //     router.push(`/groups/${groupId}`);
+                // }}
             />
         </div>
     );

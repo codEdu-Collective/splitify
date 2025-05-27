@@ -78,13 +78,16 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }: CreateGroupModa
 
     const onSubmit = async (data: { name: string; description?: string }) => {
         try {
+            console.log('Creating group with data:', data);
             const memberIds = selectedMembers.map(member => member.id);
 
             const groupId = await createGroup.mutate({
                 name: data.name,
                 description: data.description,
                 members: memberIds,
+                home: 'default-home-id-or-string',
             });
+            //!! ArgumentValidationError: Object is missing the required field `home`. Consider wrapping the field validator in `v.optional(...)` if this is expected. Object: {description: "", members: ["jd70d2s3kzy3qgx71nag3ennrs7gkh8c", "jd76mshrn986d8xy1n50sfrnbh7gk5by", "jd79a7jg22vtabad19ztzg3m617gkfmj"], name: "ekipp"} Validator: v.object({description: v.optional(v.string()), home: v.string(), members: v.array(v.id("users")), name: v.string()})
 
             toast.success('Group created successfully!');
             reset();
@@ -111,6 +114,9 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }: CreateGroupModa
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>Create New Group</DialogTitle>
+                    {/* <DialogDescription>
+                        Add a name, description, and members to create your group.
+                    </DialogDescription> */}
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

@@ -23,7 +23,7 @@ export default function RootLayout({
             <head>
                 <link rel="icon" href="/logos/logo-s.png" sizes="any" />
             </head>
-            <body className={`${inter.className}`}>
+            <body className={`${inter.className}`} suppressHydrationWarning>
                 <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
                     <ConvexClientProvider>
                         <Header />

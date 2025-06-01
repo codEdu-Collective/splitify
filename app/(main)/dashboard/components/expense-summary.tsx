@@ -14,8 +14,13 @@ import {
 } from 'recharts';
 
 interface MonthlySpendingItem {
-    month: string; // veya Date, eğer date olarak geliyorsa değiştirilebilir
+    month: string;
     total: number;
+}
+
+interface ChartDataItem {
+    name: string;
+    amount: number;
 }
 
 interface ExpenseSummaryProps {
@@ -23,26 +28,29 @@ interface ExpenseSummaryProps {
     totalSpent?: number;
 }
 
+const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+];
+
 const ExpenseSummary: React.FC<ExpenseSummaryProps> = ({
     monthlySpending = [],
     totalSpent = 0,
 }) => {
-    const monthNames = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-    ];
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
 
-    const chartData = monthlySpending.map(item => {
+    const chartData: ChartDataItem[] = monthlySpending.map(item => {
         const date = new Date(item.month);
         return {
             name: monthNames[date.getMonth()],
@@ -50,8 +58,7 @@ const ExpenseSummary: React.FC<ExpenseSummaryProps> = ({
         };
     });
 
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth();
+    const currentMonthTotal = monthlySpending[currentMonth]?.total ?? 0;
 
     return (
         <Card>
@@ -62,9 +69,7 @@ const ExpenseSummary: React.FC<ExpenseSummaryProps> = ({
                 <div className="grid grid-cols-2 gap-4">
                     <div className="bg-muted rounded-lg p-4">
                         <p className="text-sm text-muted-foreground">Total This month</p>
-                        <h3 className="text-2xl font-bold mt-1">
-                            ${monthlySpending?.[currentMonth]?.total.toFixed(2) || '0.00'}
-                        </h3>
+                        <h3 className="text-2xl font-bold mt-1">${currentMonthTotal.toFixed(2)}</h3>
                     </div>
                     <div className="bg-muted rounded-lg p-4">
                         <p className="text-sm text-muted-foreground">Total this year</p>
@@ -75,25 +80,33 @@ const ExpenseSummary: React.FC<ExpenseSummaryProps> = ({
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis dataKey="name" />
-                            <YAxis />
+                            <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                            <YAxis tickFormatter={value => `$${value}`} tick={{ fontSize: 12 }} />
                             <Tooltip
-                                formatter={(value: number) => [`$${value.toFixed(2)}`, 'Amount']}
+                                formatter={(value: unknown) => {
+                                    const numValue = typeof value === 'number' ? value : 0;
+                                    return [`$${numValue.toFixed(2)}`, 'Amount'];
+                                }}
                                 labelFormatter={() => 'Spending'}
+                                contentStyle={{
+                                    borderRadius: '8px',
+                                    border: 'none',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                }}
                             />
                             <Bar
                                 dataKey="amount"
                                 fill="#36d7b7"
                                 radius={[4, 4, 0, 0]}
-                                activeBar={<Rectangle fill="pink" stroke="blue" />}
+                                activeBar={<Rectangle fill="#4fd1c5" stroke="#38b2ac" />}
                             />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
+                <p className="text-xs text-muted-foreground text-center mt-2">
+                    Monthly spending for {currentYear}
+                </p>
             </CardContent>
-            <p className="text-xs text-muted-foreground text-center mt-2">
-                Monthly spending for {currentYear}
-            </p>
         </Card>
     );
 };

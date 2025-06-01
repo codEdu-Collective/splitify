@@ -48,7 +48,7 @@ export function BalanceSummary({ balances }: BalanceSummaryProps) {
             {/* Show settled up message if no balances */}
             {!hasOwed && !hasOwing && (
                 <div className="text-center py-6">
-                    <p className="text-muted-foreground">You're all settled up!</p>
+                    <p className="text-muted-foreground">You&aposre all settled up!</p>
                 </div>
             )}
 

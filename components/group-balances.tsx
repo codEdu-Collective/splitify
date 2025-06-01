@@ -48,7 +48,7 @@ export function GroupBalances({ balances }: GroupBalancesProps) {
     if (!me) {
         return (
             <div className="text-center py-4 text-muted-foreground">
-                You're not part of this group
+                You&aposre not part of this group
             </div>
         );
     }

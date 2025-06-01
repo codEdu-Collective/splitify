@@ -14,17 +14,59 @@ import { ExpenseList } from '@/components/expense-list';
 import { SettlementList } from '@/components/settlement-list';
 import { GroupBalances } from '@/components/group-balances';
 import { GroupMembers } from '@/components/group-members';
+import { Doc } from '@/convex/_generated/dataModel';
+import { Id } from '@/convex/_generated/dataModel';
+
+type Expense = Doc<'expenses'>;
+
+interface Member {
+    id: Id<'users'>;
+    name: string;
+    email?: string;
+    imageUrl?: string;
+    role: string;
+}
+
+interface Settlement {
+    _id: Id<'settlements'>;
+    _creationTime: number;
+    paidByUserId: Id<'users'>;
+    receivedByUserId: Id<'users'>;
+    amount: number;
+    date: number;
+    groupId?: Id<'groups'>;
+}
+
+interface Balance {
+    id: Id<'users'>;
+    name: string;
+    imageUrl?: string;
+    role: string;
+    totalBalance: number;
+    owes: { to: Id<'users'>; amount: number }[];
+    owedBy: { from: Id<'users'>; amount: number }[];
+}
+
+interface UserLookupMap {
+    [userId: string]: {
+        name: string;
+        email?: string;
+        imageUrl?: string;
+    };
+}
+
+interface Group {
+    name: string;
+    description?: string;
+}
 
 interface GroupExpensesData {
-    group?: {
-        name: string;
-        description?: string;
-    };
-    members: any[];
-    expenses: any[];
-    settlements: any[];
-    balances: any[];
-    userLookupMap: Record<string, any>;
+    group?: Group;
+    members: Member[];
+    expenses: Expense[];
+    settlements: Settlement[];
+    balances: Balance[];
+    userLookupMap: UserLookupMap;
 }
 
 export default function GroupExpensesPage() {
@@ -90,7 +132,6 @@ export default function GroupExpensesPage() {
                 </div>
             </div>
 
-            {/* Grid layout for group details */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                 <div className="lg:col-span-2">
                     <Card>
@@ -115,7 +156,6 @@ export default function GroupExpensesPage() {
                 </div>
             </div>
 
-            {/* Tabs for expenses and settlements */}
             <Tabs
                 defaultValue="expenses"
                 value={activeTab}

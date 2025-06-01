@@ -12,18 +12,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle, ArrowLeftRight, ArrowLeft, Users } from 'lucide-react';
 import { ExpenseList } from '@/components/expense-list';
 import { SettlementList } from '@/components/settlement-list';
-import { GroupExpensesResult } from '@/convex/groups';
-import { Id } from '@/convex/_generated/dataModel';
-import { GroupMembers } from '@/components/group-members';
 import { GroupBalances } from '@/components/group-balances';
+import { GroupMembers } from '@/components/group-members';
+
+interface GroupExpensesData {
+    group?: {
+        name: string;
+        description?: string;
+    };
+    members: any[];
+    expenses: any[];
+    settlements: any[];
+    balances: any[];
+    userLookupMap: Record<string, any>;
+}
 
 export default function GroupExpensesPage() {
     const params = useParams<{ id: string }>();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<string>('expenses');
 
-    const { data, isLoading } = useConvexQuery<GroupExpensesResult>(api.groups.getGroupExpenses, {
-        groupId: params.id as Id<'groups'>,
+    const { data, isLoading } = useConvexQuery<GroupExpensesData>(api.groups.getGroupExpenses, {
+        groupId: params.id,
     });
 
     if (isLoading) {

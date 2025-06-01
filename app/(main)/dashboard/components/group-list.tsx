@@ -4,11 +4,16 @@ import { Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
+interface Member {
+    id: string;
+    name: string;
+}
+
 interface Group {
     id: string;
     name: string;
     balance?: number;
-    members: unknown[];
+    members: Member[];
 }
 
 interface GroupListProps {
@@ -46,7 +51,8 @@ const GroupList: React.FC<GroupListProps> = ({ groups }) => {
                             <div>
                                 <p className="font-medium">{group.name}</p>
                                 <p className="text-xs text-muted-foreground">
-                                    {group.members.length} members
+                                    {group.members.length} member
+                                    {group.members.length !== 1 ? 's' : ''}
                                 </p>
                             </div>
                         </div>
@@ -56,7 +62,7 @@ const GroupList: React.FC<GroupListProps> = ({ groups }) => {
                                     balance > 0 ? 'text-green-600' : 'text-red-600'
                                 }`}
                             >
-                                {balance > 0 ? '+' : ''}${balance.toFixed(2)}
+                                {balance > 0 ? '+' : ''}${Math.abs(balance).toFixed(2)}
                             </span>
                         )}
                     </Link>

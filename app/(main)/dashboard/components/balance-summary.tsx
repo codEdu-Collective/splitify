@@ -2,22 +2,57 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 
-export function BalanceSummary({ balances }) {
+interface BalanceOwedItem {
+    userId: string;
+    name: string;
+    imageUrl?: string;
+    amount: number;
+}
+
+interface BalanceOwingItem {
+    base: {
+        userId: string;
+        name: string;
+        imageUrl?: string;
+        amount: number;
+    };
+}
+
+interface BalanceDetails {
+    youAreOwedBy: BalanceOwedItem[];
+    youOwe: BalanceOwingItem[];
+}
+
+interface BalanceSummaryProps {
+    balances?: {
+        oweDetails: BalanceDetails;
+    };
+}
+
+/**
+ * Displays user's balance summary with:
+ * - People who owe you (green section)
+ * - People you owe (red section)
+ * - Settled up message if no balances
+ */
+export function BalanceSummary({ balances }: BalanceSummaryProps) {
+    // Return null if no balances data
     if (!balances) return null;
 
     const { oweDetails } = balances;
     const hasOwed = oweDetails.youAreOwedBy.length > 0;
     const hasOwing = oweDetails.youOwe.length > 0;
-    console.log('owe details :', oweDetails);
 
     return (
         <div className="space-y-4">
+            {/* Show settled up message if no balances */}
             {!hasOwed && !hasOwing && (
                 <div className="text-center py-6">
                     <p className="text-muted-foreground">You're all settled up!</p>
                 </div>
             )}
 
+            {/* People who owe you section */}
             {hasOwed && (
                 <div>
                     <h3 className="text-sm font-medium flex items-center mb-3">
@@ -34,7 +69,9 @@ export function BalanceSummary({ balances }) {
                                 <div className="flex items-center gap-2">
                                     <Avatar className="h-8 w-8">
                                         <AvatarImage src={item.imageUrl} />
-                                        <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
+                                        <AvatarFallback>
+                                            {item.name.charAt(0).toUpperCase()}
+                                        </AvatarFallback>
                                     </Avatar>
                                     <span className="text-sm">{item.name}</span>
                                 </div>
@@ -47,6 +84,7 @@ export function BalanceSummary({ balances }) {
                 </div>
             )}
 
+            {/* People you owe section */}
             {hasOwing && (
                 <div>
                     <h3 className="text-sm font-medium flex items-center mb-3">
@@ -63,7 +101,9 @@ export function BalanceSummary({ balances }) {
                                 <div className="flex items-center gap-2">
                                     <Avatar className="h-8 w-8">
                                         <AvatarImage src={item.base.imageUrl} />
-                                        <AvatarFallback>{item.base.name.charAt(0)}</AvatarFallback>
+                                        <AvatarFallback>
+                                            {item.base.name.charAt(0).toUpperCase()}
+                                        </AvatarFallback>
                                     </Avatar>
                                     <span className="text-sm">{item.base.name}</span>
                                 </div>

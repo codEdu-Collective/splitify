@@ -13,29 +13,35 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle, ArrowLeftRight, ArrowLeft } from 'lucide-react';
 import { ExpenseList } from '@/components/expense-list';
 import { SettlementList } from '@/components/settlement-list';
+import type { Doc, Id } from '@/convex/_generated/dataModel';
 
-interface OtherUser {
+type Settlement = Doc<'settlements'>;
+
+type Expense = Doc<'expenses'>;
+
+interface User {
     id: string;
-    name?: string;
+    name: string;
     email?: string;
     imageUrl?: string;
 }
 
-interface ExpenseData {
-    otherUser: OtherUser;
-    expenses: any[]; // Replace 'any' with your actual expense type
-    settlements: any[]; // Replace 'any' with your actual settlement type
+interface ExpensesBetweenUsersResponse {
+    otherUser: User;
+    expenses: Expense[];
+    settlements: Settlement[];
     balance: number;
 }
 
 export default function PersonExpensesPage() {
     const params = useParams<{ id: string }>();
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<string>('expenses');
+    const [activeTab, setActiveTab] = useState<'expenses' | 'settlements'>('expenses');
 
-    const { data, isLoading } = useConvexQuery<ExpenseData>(api.expenses.getExpensesBetweenUsers, {
-        userId: params.id,
-    });
+    const { data, isLoading } = useConvexQuery<ExpensesBetweenUsersResponse>(
+        api.expenses.getExpensesBetweenUsers,
+        { userId: params.id },
+    );
 
     if (isLoading) {
         return (
@@ -45,10 +51,9 @@ export default function PersonExpensesPage() {
         );
     }
 
-    const otherUser = data?.otherUser;
-    const expenses = data?.expenses || [];
-    const settlements = data?.settlements || [];
-    const balance = data?.balance || 0;
+    if (!data) return null;
+
+    const { otherUser, expenses = [], settlements = [], balance = 0 } = data;
 
     return (
         <div className="container mx-auto py-6 max-w-4xl">
@@ -87,7 +92,7 @@ export default function PersonExpensesPage() {
                 </div>
             </div>
 
-            {/* Balance card */}
+            {/* Balance Card */}
             <Card className="mb-6">
                 <CardHeader className="pb-2">
                     <CardTitle className="text-xl">Balance</CardTitle>
@@ -108,7 +113,9 @@ export default function PersonExpensesPage() {
                             )}
                         </div>
                         <div
-                            className={`text-2xl font-bold ${balance > 0 ? 'text-green-600' : balance < 0 ? 'text-red-600' : ''}`}
+                            className={`text-2xl font-bold ${
+                                balance > 0 ? 'text-green-600' : balance < 0 ? 'text-red-600' : ''
+                            }`}
                         >
                             ${Math.abs(balance).toFixed(2)}
                         </div>
@@ -116,11 +123,11 @@ export default function PersonExpensesPage() {
                 </CardContent>
             </Card>
 
-            {/* Tabs for expenses and settlements */}
+            {/* Tabs */}
             <Tabs
                 defaultValue="expenses"
                 value={activeTab}
-                onValueChange={setActiveTab}
+                onValueChange={value => setActiveTab(value as 'expenses' | 'settlements')}
                 className="space-y-4"
             >
                 <TabsList className="grid w-full grid-cols-2">
@@ -131,23 +138,19 @@ export default function PersonExpensesPage() {
                 </TabsList>
 
                 <TabsContent value="expenses" className="space-y-4">
-                    {otherUser && (
-                        <ExpenseList
-                            expenses={expenses}
-                            showOtherPerson={false}
-                            otherPersonId={params.id}
-                            userLookupMap={{ [otherUser.id]: otherUser }}
-                        />
-                    )}
+                    <ExpenseList
+                        expenses={expenses}
+                        showOtherPerson={false}
+                        otherPersonId={params.id as Id<'users'>}
+                        userLookupMap={{ [otherUser.id]: otherUser }}
+                    />
                 </TabsContent>
 
                 <TabsContent value="settlements" className="space-y-4">
-                    {otherUser && (
-                        <SettlementList
-                            settlements={settlements}
-                            userLookupMap={{ [otherUser.id]: otherUser }}
-                        />
-                    )}
+                    <SettlementList
+                        settlements={settlements}
+                        userLookupMap={{ [otherUser.id]: otherUser }}
+                    />
                 </TabsContent>
             </Tabs>
         </div>

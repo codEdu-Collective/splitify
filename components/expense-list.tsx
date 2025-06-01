@@ -11,32 +11,14 @@ import { getCategoryIcon } from '@/lib/expense-categories';
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Id } from '@/convex/_generated/dataModel';
+import type { Doc, Id } from '@/convex/_generated/dataModel';
+
+type Expense = Doc<'expenses'>;
 
 interface UserDetails {
     id: Id<'users'>;
     name: string;
     imageUrl: string | null;
-}
-
-interface Split {
-    userId: Id<'users'>;
-    amount: number;
-    paid: boolean;
-}
-
-interface Expense {
-    _id: Id<'expenses'>;
-    _creationTime: number;
-    paidByUserId: Id<'users'>;
-    groupId?: Id<'groups'>;
-    splits: Split[];
-    description: string;
-    amount: number;
-    date: number;
-    category?: string;
-    createdBy: Id<'users'>;
-    splitType: string;
 }
 
 interface ExpenseListProps {
@@ -47,6 +29,12 @@ interface ExpenseListProps {
     userLookupMap?: Record<string, { name: string; imageUrl?: string }>;
 }
 
+type CurrentUser = {
+    _id: Id<'users'>;
+    name: string;
+    imageUrl?: string;
+};
+
 export function ExpenseList({
     expenses,
     showOtherPerson = true,
@@ -54,7 +42,7 @@ export function ExpenseList({
     otherPersonId = null,
     userLookupMap = {},
 }: ExpenseListProps) {
-    const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
+    const { data: currentUser } = useConvexQuery<CurrentUser>(api.users.getCurrentUser);
     const deleteExpense = useConvexMutation(api.expenses.deleteExpense);
 
     if (!expenses || !expenses.length) {

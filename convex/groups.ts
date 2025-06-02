@@ -202,7 +202,6 @@ export const getGroupExpenses = query({
             });
         });
 
-        // Process expenses
         for (const exp of validExpenses) {
             const payer = exp.paidByUserId;
             for (const split of exp.splits) {
@@ -216,14 +215,12 @@ export const getGroupExpenses = query({
             }
         }
 
-        // Process settlements
         for (const s of settlements) {
             totals[s.paidByUserId] += s.amount;
             totals[s.receivedByUserId] -= s.amount;
             ledger[s.paidByUserId][s.receivedByUserId] -= s.amount;
         }
 
-        // Net the ledger
         ids.forEach(a => {
             ids.forEach(b => {
                 if (a >= b) return;

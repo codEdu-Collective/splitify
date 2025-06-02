@@ -22,13 +22,6 @@
             "@/*": ["./*"]
         }
     },
-    "include": [
-        "new-env.d.ts",
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        ".next/types/**/*.ts",
-        "components/convex-client-provider.jsx"
-    ],
+    "include": ["new-env.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
     "exclude": ["node_modules"]
 }

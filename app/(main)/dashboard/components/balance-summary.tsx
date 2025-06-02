@@ -29,14 +29,7 @@ interface BalanceSummaryProps {
     };
 }
 
-/**
- * Displays user's balance summary with:
- * - People who owe you (green section)
- * - People you owe (red section)
- * - Settled up message if no balances
- */
 export function BalanceSummary({ balances }: BalanceSummaryProps) {
-    // Return null if no balances data
     if (!balances) return null;
 
     const { oweDetails } = balances;
@@ -45,14 +38,12 @@ export function BalanceSummary({ balances }: BalanceSummaryProps) {
 
     return (
         <div className="space-y-4">
-            {/* Show settled up message if no balances */}
             {!hasOwed && !hasOwing && (
                 <div className="text-center py-6">
                     <p className="text-muted-foreground">You&aposre all settled up!</p>
                 </div>
             )}
 
-            {/* People who owe you section */}
             {hasOwed && (
                 <div>
                     <h3 className="text-sm font-medium flex items-center mb-3">
@@ -84,7 +75,6 @@ export function BalanceSummary({ balances }: BalanceSummaryProps) {
                 </div>
             )}
 
-            {/* People you owe section */}
             {hasOwing && (
                 <div>
                     <h3 className="text-sm font-medium flex items-center mb-3">

@@ -24,19 +24,16 @@ import {
     LucideIcon,
 } from 'lucide-react';
 
-// Define type for category
 interface ExpenseCategory {
     id: string;
     name: string;
     icon: LucideIcon;
 }
 
-// Define type for categories object
 interface ExpenseCategories {
     [key: string]: ExpenseCategory;
 }
 
-// Object containing all categories with their respective icons
 export const EXPENSE_CATEGORIES: ExpenseCategories = {
     foodDrink: {
         id: 'foodDrink',
@@ -150,21 +147,17 @@ export const EXPENSE_CATEGORIES: ExpenseCategories = {
     },
 };
 
-// Helper function to get category by ID
 export const getCategoryById = (categoryId: string): ExpenseCategory => {
     return EXPENSE_CATEGORIES[categoryId] || EXPENSE_CATEGORIES.other;
 };
 
-// Get array of all categories (useful for dropdowns)
 export const getAllCategories = (): ExpenseCategory[] => {
     return Object.values(EXPENSE_CATEGORIES);
 };
 
-// Get icon for a category
 export const getCategoryIcon = (categoryId: string): LucideIcon => {
     const category = getCategoryById(categoryId);
     return category.icon;
 };
 
-// Export the category type for use elsewhere
 export type { ExpenseCategory };

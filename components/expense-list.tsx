@@ -55,7 +55,6 @@ export function ExpenseList({
         );
     }
 
-    // Helper to get user details from cache or look up from expense
     const getUserDetails = (userId: Id<'users'>): UserDetails => {
         return {
             name: userId === currentUser?._id ? 'You' : userLookupMap[userId]?.name || 'Other User',
@@ -64,13 +63,11 @@ export function ExpenseList({
         };
     };
 
-    // Check if the user can delete an expense (creator or payer)
     const canDeleteExpense = (expense: Expense): boolean => {
         if (!currentUser) return false;
         return expense.createdBy === currentUser._id || expense.paidByUserId === currentUser._id;
     };
 
-    // Handle delete expense
     const handleDeleteExpense = async (expense: Expense) => {
         const confirmed = window.confirm(
             'Are you sure you want to delete this expense? This action cannot be undone.',

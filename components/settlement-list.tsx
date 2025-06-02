@@ -55,7 +55,6 @@ export function SettlementList({
         );
     }
 
-    // Helper to get user details from cache or look up
     const getUserDetails = (userId: Id<'users'>): UserDetails => {
         return {
             name: userId === currentUser?._id ? 'You' : userLookupMap[userId]?.name || 'Other User',

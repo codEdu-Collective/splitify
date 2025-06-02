@@ -34,7 +34,6 @@ interface GroupBalancesProps {
 export function GroupBalances({ balances }: GroupBalancesProps) {
     const { data: currentUser } = useConvexQuery<UserDetails>(api.users.getCurrentUser);
 
-    // guards
     if (!balances?.length || !currentUser) {
         return (
             <div className="text-center py-4 text-muted-foreground">
@@ -43,7 +42,6 @@ export function GroupBalances({ balances }: GroupBalancesProps) {
         );
     }
 
-    // helper
     const me = balances.find(b => b.id === currentUser._id);
     if (!me) {
         return (
@@ -55,12 +53,10 @@ export function GroupBalances({ balances }: GroupBalancesProps) {
 
     const userMap = Object.fromEntries(balances.map(b => [b.id, b]));
 
-    // Who owes me?
     const owedByMembers: BalanceMember[] = me.owedBy
         .map(({ from, amount }) => ({ ...userMap[from], amount }))
         .sort((a, b) => b.amount - a.amount);
 
-    // Whom do I owe?
     const owingToMembers: BalanceMember[] = me.owes
         .map(({ to, amount }) => ({ ...userMap[to], amount }))
         .sort((a, b) => b.amount - a.amount);

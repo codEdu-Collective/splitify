@@ -2,6 +2,24 @@
     "name": "splitify",
     "version": "0.1.0",
     "private": true,
+    "contributors": [
+        {
+            "name": "Abdullah Koyuncu",
+            "email": "wisewebworks@outlook.com"
+        },
+        {
+            "name": "Ahmet Yavuz",
+            "email": "1yavuzahmet@gmail.com"
+        },
+        {
+            "name": "Zeynep Bahar Yılmaz",
+            "email": "ylmzbhr1@gmail.com"
+        },
+        {
+            "name": "Imren Rahbay",
+            "email": "imrenrahbay@gmail.com"
+        }
+    ],
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build",
@@ -11,9 +29,9 @@
         "write": "prettier . --write"
     },
     "dependencies": {
-        "@clerk/backend": "^1.33.0",
-        "@clerk/nextjs": "^6.20.0",
-        "@clerk/themes": "^2.2.46",
+        "@clerk/backend": "^1.34.0",
+        "@clerk/nextjs": "^6.20.2",
+        "@clerk/themes": "^2.2.48",
         "@google/generative-ai": "^0.24.1",
         "@hookform/resolvers": "^5.0.1",
         "@radix-ui/react-avatar": "^1.1.10",
@@ -29,39 +47,39 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
-        "convex": "^1.24.1",
+        "convex": "^1.24.6",
         "date-fns": "^4.1.0",
-        "inngest": "^3.37.0",
+        "inngest": "^3.38.0",
         "lucide-react": "^0.511.0",
-        "next": "15.3.2",
+        "next": "15.3.3",
         "next-themes": "^0.4.6",
         "react": "^19.1.0",
         "react-day-picker": "^9.7.0",
         "react-dom": "^19.1.0",
-        "react-hook-form": "^7.56.4",
+        "react-hook-form": "^7.57.0",
         "react-spinners": "^0.17.0",
         "recharts": "^2.15.3",
         "resend": "^4.5.1",
-        "sonner": "^2.0.3",
+        "sonner": "^2.0.5",
         "svix": "^1.66.0",
         "tailwind-merge": "^3.3.0",
-        "tw-animate-css": "^1.3.0",
-        "zod": "^3.25.28"
+        "tw-animate-css": "^1.3.3",
+        "zod": "^3.25.48"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3.3.1",
-        "@tailwindcss/postcss": "^4.1.7",
+        "@tailwindcss/postcss": "^4.1.8",
         "@types/lodash": "^4.17.17",
-        "@types/node": "^22.15.22",
-        "@types/react": "19.1.5",
+        "@types/node": "^22.15.29",
+        "@types/react": "19.1.6",
         "@types/react-dom": "^19.1.5",
         "autoprefixer": "^10.4.21",
-        "eslint": "^9.27.0",
+        "eslint": "^9.28.0",
         "eslint-config-next": "15.4.0-canary.51",
         "eslint-config-prettier": "^10.1.5",
-        "postcss": "^8.5.3",
+        "postcss": "^8.5.4",
         "prettier": "^3.5.3",
-        "tailwindcss": "^4.1.7",
+        "tailwindcss": "^4.1.8",
         "typescript": "^5.8.3"
     }
 }

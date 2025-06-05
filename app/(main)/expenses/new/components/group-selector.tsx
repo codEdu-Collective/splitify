@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import { useConvexQuery } from '@/hooks/use-convex-query';
 import { api } from '@/convex/_generated/api';
 import { BarLoader } from 'react-spinners';
@@ -13,10 +13,21 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
-export function GroupSelector({ onChange }) {
+type Group = {
+    id: string;
+    name: string;
+    memberCount: number;
+};
+
+type GroupQueryData = {
+    groups: Group[];
+    selectedGroup?: Group;
+};
+
+export function GroupSelector({ onChange }: { onChange?: (group: Group) => void }) {
     const [selectedGroupId, setSelectedGroupId] = useState('');
 
-    const { data, isLoading } = useConvexQuery(
+    const { data, isLoading } = useConvexQuery<GroupQueryData>(
         api.groups.getGroupOrMembers,
         selectedGroupId ? { groupId: selectedGroupId } : {},
     );
@@ -27,7 +38,7 @@ export function GroupSelector({ onChange }) {
         }
     }, [data, onChange]);
 
-    const handleGroupChange = groupId => {
+    const handleGroupChange = (groupId: SetStateAction<string>) => {
         setSelectedGroupId(groupId);
     };
 

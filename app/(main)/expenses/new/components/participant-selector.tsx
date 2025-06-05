@@ -17,9 +17,16 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
+// @ts-expect-error: ToDO
 export function ParticipantSelector({ participants, onParticipantsChange }) {
-  console.log("participants",participants);
-    const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
+    type User = {
+        _id: string;
+        id?: string;
+        name?: string;
+        email?: string;
+        imageUrl?: string;
+    };
+    const { data: currentUser } = useConvexQuery<User | null>(api.users.getCurrentUser);
     const [open, setOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -27,8 +34,14 @@ export function ParticipantSelector({ participants, onParticipantsChange }) {
         query: searchQuery,
     });
 
-    const addParticipant = user => {
-        if (participants.some(p => p.id === user.id)) {
+    const addParticipant = (user: {
+        id: string;
+        name?: string;
+        email?: string;
+        imageUrl?: string;
+        _id?: string;
+    }) => {
+        if (participants.some((p: { id: string }) => p.id === user.id)) {
             return;
         }
 
@@ -37,43 +50,53 @@ export function ParticipantSelector({ participants, onParticipantsChange }) {
         setSearchQuery('');
     };
 
-    const removeParticipant = userId => {
-        if (userId === currentUser._id) {
+    const removeParticipant = (userId: string) => {
+        if (currentUser && userId === currentUser._id) {
             return;
         }
 
-        onParticipantsChange(participants.filter(p => p.id !== userId));
+        onParticipantsChange(participants.filter((p: { id: string }) => p.id !== userId));
     };
 
     return (
         <div className="space-y-3">
             <div className="flex flex-wrap gap-2">
-                {participants.map(participant => (
-                    <Badge
-                        key={participant.name}
-                        variant="secondary"
-                        className="flex items-center gap-2 px-3 py-2"
-                    >
-                        <Avatar className="h-5 w-5">
-                            <AvatarImage src={participant.imageUrl} />
-                            <AvatarFallback>{participant.name?.charAt(0) || '?'}</AvatarFallback>
-                        </Avatar>
-                        <span>
-                            {participant._id === currentUser?._id
-                                ? 'You'
-                                : participant.name || participant.email}
-                        </span>
-                        {participant._id !== currentUser?._id && (
-                            <button
-                                type="button"
-                                onClick={() => removeParticipant(participant._id)}
-                                className="ml-1 text-muted-foreground hover:text-foreground"
-                            >
-                                <X className="h-3 w-3" />
-                            </button>
-                        )}
-                    </Badge>
-                ))}
+                {participants.map(
+                    (participant: {
+                        id: string;
+                        name?: string;
+                        email?: string;
+                        imageUrl?: string;
+                        _id?: string;
+                    }) => (
+                        <Badge
+                            key={participant.name}
+                            variant="secondary"
+                            className="flex items-center gap-2 px-3 py-2"
+                        >
+                            <Avatar className="h-5 w-5">
+                                <AvatarImage src={participant.imageUrl} />
+                                <AvatarFallback>
+                                    {participant.name?.charAt(0) || '?'}
+                                </AvatarFallback>
+                            </Avatar>
+                            <span>
+                                {participant._id === currentUser?._id
+                                    ? 'You'
+                                    : participant.name || participant.email}
+                            </span>
+                            {participant._id !== currentUser?._id && participant._id && (
+                                <button
+                                    type="button"
+                                    onClick={() => removeParticipant(participant._id!)}
+                                    className="ml-1 text-muted-foreground hover:text-foreground"
+                                >
+                                    <X className="h-3 w-3" />
+                                </button>
+                            )}
+                        </Badge>
+                    ),
+                )}
 
                 {participants.length < 2 && (
                     <Popover open={open} onOpenChange={setOpen}>
@@ -112,28 +135,41 @@ export function ParticipantSelector({ participants, onParticipantsChange }) {
                                         )}
                                     </CommandEmpty>
                                     <CommandGroup heading="Users">
-                                        {searchResults?.map(user => (
-                                            <CommandItem
-                                                key={user.id}
-                                                value={user.name + user.email}
-                                                onSelect={() => addParticipant(user)}
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <Avatar className="h-6 w-6">
-                                                        <AvatarImage src={user.imageUrl} />
-                                                        <AvatarFallback>
-                                                            {user.name?.charAt(0) || '?'}
-                                                        </AvatarFallback>
-                                                    </Avatar>
-                                                    <div className="flex flex-col">
-                                                        <span className="text-sm">{user.name}</span>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {user.email}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </CommandItem>
-                                        ))}
+                                        {
+                                            // @ts-expect-error: ToDO
+                                            searchResults.map(
+                                                (user: {
+                                                    id: string;
+                                                    name?: string;
+                                                    email?: string;
+                                                    imageUrl?: string;
+                                                    _id?: string;
+                                                }) => (
+                                                    <CommandItem
+                                                        key={user.id}
+                                                        value={`${user.name ?? ''}${user.email ?? ''}`}
+                                                        onSelect={() => addParticipant(user)}
+                                                    >
+                                                        <div className="flex items-center gap-2">
+                                                            <Avatar className="h-6 w-6">
+                                                                <AvatarImage src={user.imageUrl} />
+                                                                <AvatarFallback>
+                                                                    {user.name?.charAt(0) || '?'}
+                                                                </AvatarFallback>
+                                                            </Avatar>
+                                                            <div className="flex flex-col">
+                                                                <span className="text-sm">
+                                                                    {user.name}
+                                                                </span>
+                                                                <span className="text-xs text-muted-foreground">
+                                                                    {user.email}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </CommandItem>
+                                                ),
+                                            )
+                                        }
                                     </CommandGroup>
                                 </CommandList>
                             </Command>

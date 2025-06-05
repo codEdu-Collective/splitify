@@ -37,20 +37,33 @@ const expenseSchema = z.object({
     groupId: z.string().optional(),
 });
 
-type User = {
+type Participant = {
+    id: string;
+    name: string;
+    email: string;
+    imageUrl?: string;
+};
+
+type CurrentUser = {
     _id: string;
     name: string;
     email: string;
     imageUrl?: string;
 };
 
-export function ExpenseForm({ type = 'individual', onSuccess }) {
-    const [participants, setParticipants] = useState<User[]>([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());
+export function ExpenseForm({
+    type = 'individual',
+    onSuccess,
+}: {
+    type?: 'individual' | 'group';
+    onSuccess?: (id?: string) => void;
+}) {
+    const [participants, setParticipants] = useState<Participant[]>([]);
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [selectedGroup, setSelectedGroup] = useState<any>(null);
     const [splits, setSplits] = useState<any[]>([]);
 
-    const { data: currentUser } = useConvexQuery<User | null>(api.users.getCurrentUser);
+    const { data: currentUser } = useConvexQuery<CurrentUser>(api.users.getCurrentUser);
 
     const createExpense = useConvexMutation(api.expenses.createExpense);
     const categories = getAllCategories();
@@ -82,7 +95,7 @@ export function ExpenseForm({ type = 'individual', onSuccess }) {
         if (participants.length === 0 && currentUser) {
             setParticipants([
                 {
-                    _id: currentUser._id,
+                    id: currentUser._id,
                     name: currentUser.name,
                     email: currentUser.email,
                     imageUrl: currentUser.imageUrl,
@@ -92,14 +105,15 @@ export function ExpenseForm({ type = 'individual', onSuccess }) {
     }, [currentUser, participants]);
 
     const onSubmit = async (data: z.infer<typeof expenseSchema>) => {
-        console.log('Form data:', data);
         try {
             const amount = parseFloat(data.amount);
+
             const formattedSplits = splits.map(split => ({
                 userId: split.userId,
                 amount: split.amount,
                 paid: split.userId === data.paidByUserId,
             }));
+
             const totalSplitAmount = formattedSplits.reduce((sum, split) => sum + split.amount, 0);
             const tolerance = 0.01;
 
@@ -123,8 +137,9 @@ export function ExpenseForm({ type = 'individual', onSuccess }) {
 
             toast.success('Expense created successfully!');
             reset();
-            const otherParticipant = participants.find(p => p._id !== currentUser._id);
-            const otherUserId = otherParticipant?._id;
+
+            const otherParticipant = participants.find(p => p.id !== currentUser?._id);
+            const otherUserId = otherParticipant?.id;
 
             if (onSuccess) onSuccess(type === 'individual' ? otherUserId : groupId);
         } catch (error) {
@@ -207,8 +222,10 @@ export function ExpenseForm({ type = 'individual', onSuccess }) {
                                     mode="single"
                                     selected={selectedDate}
                                     onSelect={date => {
-                                        setSelectedDate(date);
-                                        setValue('date', date);
+                                        if (date) {
+                                            setSelectedDate(date);
+                                            setValue('date', date);
+                                        }
                                     }}
                                     initialFocus
                                 />
@@ -221,13 +238,13 @@ export function ExpenseForm({ type = 'individual', onSuccess }) {
                     <div className="space-y-2">
                         <Label>Group</Label>
                         <GroupSelector
-                            onChange={(group: any) => {
+                            onChange={group => {
                                 if (!selectedGroup || selectedGroup.id !== group.id) {
                                     setSelectedGroup(group);
                                     setValue('groupId', group.id);
 
-                                    if (group.members && Array.isArray(group.members)) {
-                                        setParticipants(group.members);
+                                    if (Array.isArray((group as any).members)) {
+                                        setParticipants((group as any).members);
                                     }
                                 }
                             }}
@@ -263,8 +280,8 @@ export function ExpenseForm({ type = 'individual', onSuccess }) {
                     >
                         <option value="">Select who paid</option>
                         {participants.map(participant => (
-                            <option key={participant?._id} value={participant?._id}>
-                                {participant?._id === currentUser._id ? 'You' : participant.name}
+                            <option key={participant.id} value={participant.id}>
+                                {participant.id === currentUser._id ? 'You' : participant.name}
                             </option>
                         ))}
                     </select>

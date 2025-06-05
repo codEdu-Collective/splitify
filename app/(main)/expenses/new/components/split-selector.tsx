@@ -43,16 +43,14 @@ export function SplitSelector({
     const [totalPercentage, setTotalPercentage] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
 
-    // Calculate splits when inputs change
     useEffect(() => {
         if (!amount || amount <= 0 || participants.length === 0) {
             return;
         }
 
-        let newSplits = [];
+        let newSplits: Split[] = [];
 
         if (type === 'equal') {
-            // Equal splits
             const shareAmount = amount / participants.length;
             newSplits = participants.map(participant => ({
                 userId: participant.id,
@@ -64,7 +62,6 @@ export function SplitSelector({
                 paid: participant.id === paidByUserId,
             }));
         } else if (type === 'percentage') {
-            // Initialize percentage splits evenly
             const evenPercentage = 100 / participants.length;
             newSplits = participants.map(participant => ({
                 userId: participant.id,
@@ -76,7 +73,6 @@ export function SplitSelector({
                 paid: participant.id === paidByUserId,
             }));
         } else if (type === 'exact') {
-            // Initialize exact splits evenly
             const evenAmount = amount / participants.length;
             newSplits = participants.map(participant => ({
                 userId: participant.id,
@@ -91,22 +87,18 @@ export function SplitSelector({
 
         setSplits(newSplits);
 
-        // Calculate totals
         const newTotalAmount = newSplits.reduce((sum, split) => sum + split.amount, 0);
         const newTotalPercentage = newSplits.reduce((sum, split) => sum + split.percentage, 0);
 
         setTotalAmount(newTotalAmount);
         setTotalPercentage(newTotalPercentage);
 
-        // Notify parent about the split changes
         if (onSplitsChange) {
             onSplitsChange(newSplits);
         }
     }, [type, amount, participants, paidByUserId, onSplitsChange]);
 
-    // Update the percentage splits - no automatic adjustment of other values
-    const updatePercentageSplit = (userId, newPercentage) => {
-        // Update just this user's percentage and recalculate amount
+    const updatePercentageSplit = (userId: string, newPercentage: number) => {
         const updatedSplits = splits.map(split => {
             if (split.userId === userId) {
                 return {
@@ -120,24 +112,20 @@ export function SplitSelector({
 
         setSplits(updatedSplits);
 
-        // Recalculate totals
         const newTotalAmount = updatedSplits.reduce((sum, split) => sum + split.amount, 0);
         const newTotalPercentage = updatedSplits.reduce((sum, split) => sum + split.percentage, 0);
 
         setTotalAmount(newTotalAmount);
         setTotalPercentage(newTotalPercentage);
 
-        // Notify parent about the split changes
         if (onSplitsChange) {
             onSplitsChange(updatedSplits);
         }
     };
 
-    // Update the exact amount splits - no automatic adjustment of other values
-    const updateExactSplit = (userId, newAmount) => {
+    const updateExactSplit = (userId: string, newAmount: string) => {
         const parsedAmount = parseFloat(newAmount) || 0;
 
-        // Update just this user's amount and recalculate percentage
         const updatedSplits = splits.map(split => {
             if (split.userId === userId) {
                 return {
@@ -151,23 +139,20 @@ export function SplitSelector({
 
         setSplits(updatedSplits);
 
-        // Recalculate totals
         const newTotalAmount = updatedSplits.reduce((sum, split) => sum + split.amount, 0);
         const newTotalPercentage = updatedSplits.reduce((sum, split) => sum + split.percentage, 0);
 
         setTotalAmount(newTotalAmount);
         setTotalPercentage(newTotalPercentage);
 
-        // Notify parent about the split changes
         if (onSplitsChange) {
             onSplitsChange(updatedSplits);
         }
     };
 
-    // Check if totals are valid
     const isPercentageValid = Math.abs(totalPercentage - 100) < 0.01;
     const isAmountValid = Math.abs(totalAmount - amount) < 0.01;
-     splits && console.log("splits", splits);
+    splits && console.log('splits', splits);
 
     return (
         <div className="space-y-4 mt-4">
@@ -229,7 +214,7 @@ export function SplitSelector({
                                 <Input
                                     type="number"
                                     min="0"
-                                    max={amount * 2} // Allow values even higher than total for flexibility
+                                    max={amount * 2}
                                     step="0.01"
                                     value={split.amount.toFixed(2)}
                                     onChange={e => updateExactSplit(split.userId, e.target.value)}
@@ -260,8 +245,6 @@ export function SplitSelector({
                     )}
                 </div>
             </div>
-
-            {/* Validation warnings */}
             {type === 'percentage' && !isPercentageValid && (
                 <div className="text-sm text-amber-600 mt-2">
                     The percentages should add up to 100%.

@@ -27,13 +27,13 @@ export default function NewExpensePage() {
                         <TabsContent value="individual" className="mt-0">
                             <ExpenseForm
                                 type="individual"
-                                onSuccess={(id: string) => router.push(`/person/${id}`)}
+                                onSuccess={id => router.push(`/person/${id}`)}
                             />
                         </TabsContent>
                         <TabsContent value="group" className="mt-0">
                             <ExpenseForm
                                 type="group"
-                                onSuccess={(id: string) => router.push(`/groups/${id}`)}
+                                onSuccess={id => router.push(`/groups/${id}`)}
                             />
                         </TabsContent>
                     </Tabs>

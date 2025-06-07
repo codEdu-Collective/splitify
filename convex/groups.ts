@@ -90,7 +90,7 @@ export const getGroupOrMembers = query({
         groupId: v.optional(v.id('groups')),
     },
     handler: async (ctx, args): Promise<GroupOrMembersResult> => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const currentUser = await ctx.runQuery(internal.users.getCurrentUser);
         if (!currentUser) throw new Error('User not authenticated');
 
@@ -156,7 +156,7 @@ export const getGroupOrMembers = query({
 export const getGroupExpenses = query({
     args: { groupId: v.id('groups') },
     handler: async (ctx, { groupId }): Promise<GroupExpensesResult> => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const currentUser = await ctx.runQuery(internal.users.getCurrentUser);
         if (!currentUser) throw new Error('User not authenticated');
 

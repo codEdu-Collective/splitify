@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 
 type Group = {
+    members: string[];
     id: string;
     name: string;
     memberCount: number;

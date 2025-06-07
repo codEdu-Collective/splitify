@@ -59,7 +59,7 @@ export const getExpensesBetweenUsers = query({
         };
         balance: number;
     }> => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const me = await ctx.runQuery(internal.users.getCurrentUser);
         if (!me) throw new Error('User not found');
         if (me._id === userId) throw new Error('Cannot query yourself');
@@ -155,7 +155,7 @@ export const deleteExpense = mutation({
         expenseId: v.id('expenses'),
     },
     handler: async (ctx, args): Promise<{ success: boolean }> => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const user = await ctx.runQuery(internal.users.getCurrentUser);
         if (!user) throw new Error('User not found');
 
@@ -191,7 +191,7 @@ export const createExpense: ReturnType<typeof mutation> = mutation({
         groupId: v.optional(v.id('groups')),
     },
     handler: async (ctx, args) => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const user = await ctx.runQuery(internal.users.getCurrentUser);
         if (args.groupId) {
             const group = await ctx.db.get(args.groupId);

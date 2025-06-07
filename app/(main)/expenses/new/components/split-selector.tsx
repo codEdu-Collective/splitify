@@ -152,7 +152,6 @@ export function SplitSelector({
 
     const isPercentageValid = Math.abs(totalPercentage - 100) < 0.01;
     const isAmountValid = Math.abs(totalAmount - amount) < 0.01;
-    splits && console.log('splits', splits);
 
     return (
         <div className="space-y-4 mt-4">

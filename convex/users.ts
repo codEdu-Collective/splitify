@@ -56,7 +56,7 @@ export const searchUsers = query({
         ctx,
         args,
     ): Promise<Array<{ id: string; name: string; email: string; imageUrl: string }>> => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const currentUser = await ctx.runQuery(internal.users.getCurrentUser);
 
         if (args.query.length < 2) {

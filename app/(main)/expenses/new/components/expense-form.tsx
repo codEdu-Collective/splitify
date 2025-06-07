@@ -37,20 +37,6 @@ const expenseSchema = z.object({
     groupId: z.string().optional(),
 });
 
-type Participant = {
-    id: string;
-    name: string;
-    email: string;
-    imageUrl?: string;
-};
-
-type CurrentUser = {
-    _id: string;
-    name: string;
-    email: string;
-    imageUrl?: string;
-};
-
 export function ExpenseForm({
     type = 'individual',
     onSuccess,
@@ -60,11 +46,10 @@ export function ExpenseForm({
 }) {
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [selectedGroup, setSelectedGroup] = useState<any>(null);
-    const [splits, setSplits] = useState<any[]>([]);
+    const [selectedGroup, setSelectedGroup] = useState<Group2 | null>(null);
+    const [splits, setSplits] = useState<Split[]>([]);
 
     const { data: currentUser } = useConvexQuery<CurrentUser>(api.users.getCurrentUser);
-
     const createExpense = useConvexMutation(api.expenses.createExpense);
     const categories = getAllCategories();
 
@@ -240,11 +225,25 @@ export function ExpenseForm({
                         <GroupSelector
                             onChange={group => {
                                 if (!selectedGroup || selectedGroup.id !== group.id) {
-                                    setSelectedGroup(group);
+                                    const mappedGroup: Group2 = {
+                                        id: group.id,
+                                        name: group.name,
+                                        members: (group.members as string[]).map(id => {
+                                            const existing = participants.find(p => p.id === id);
+                                            return (
+                                                existing || {
+                                                    id,
+                                                    name: id,
+                                                    email: '',
+                                                }
+                                            );
+                                        }),
+                                    };
+                                    setSelectedGroup(mappedGroup);
                                     setValue('groupId', group.id);
 
-                                    if (Array.isArray((group as any).members)) {
-                                        setParticipants((group as any).members);
+                                    if (Array.isArray(mappedGroup.members)) {
+                                        setParticipants(mappedGroup.members);
                                     }
                                 }
                             }}

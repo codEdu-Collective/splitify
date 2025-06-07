@@ -29,7 +29,7 @@ type GetAllContactsResult = {
 
 export const getAllContacts = query({
     handler: async (ctx: QueryCtx): Promise<GetAllContactsResult> => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const currentUser = await ctx.runQuery(internal.users.getCurrentUser);
         const expensesPaid = await ctx.db
             .query('expenses')
@@ -112,7 +112,7 @@ export const createGroup = mutation({
             members: Id<'users'>[];
         },
     ): Promise<Id<'groups'>> => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const currentUser = await ctx.runQuery(internal.users.getCurrentUser);
 
         if (!args.name.trim()) throw new Error('Group name cannot be empty');

@@ -22,7 +22,6 @@ export const sendEmail = action({
                 text: args.text,
             });
 
-            // return { success: true, id: result.id }; // FYI: https://resend.com/docs/send-with-nextjs
             return { success: true, data: result.data, error: result.error };
         } catch (error) {
             console.error('Failed to send email:', error);

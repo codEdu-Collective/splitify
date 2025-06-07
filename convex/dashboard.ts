@@ -4,7 +4,7 @@ import { query } from './_generated/server';
 
 export const getUserBalances = query({
     handler: async ctx => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const user = await ctx.runQuery(internal.users.getCurrentUser);
         const expenses = (await ctx.db.query('expenses').collect()).filter(
             e =>
@@ -78,7 +78,7 @@ export const getUserBalances = query({
 
 export const getTotalSpent = query({
     handler: async ctx => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const user = await ctx.runQuery(internal.users.getCurrentUser);
 
         const currentYear = new Date().getFullYear();
@@ -109,7 +109,7 @@ export const getTotalSpent = query({
 
 export const getMonthlySpending = query({
     handler: async ctx => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const user = await ctx.runQuery(internal.users.getCurrentUser);
         const currentYear = new Date().getFullYear();
         const startOfYear = new Date(currentYear, 0, 1).getTime();
@@ -146,7 +146,7 @@ export const getMonthlySpending = query({
 });
 export const getUserGroups = query({
     handler: async (ctx): Promise<any[]> => {
-        // @ts-expect-error: ToDO
+        // @ts-expect-error: False-Positive
         const user = await ctx.runQuery(internal.users.getCurrentUser);
         const allGroups = await ctx.db.query('groups').collect();
         const groups = allGroups.filter(group =>

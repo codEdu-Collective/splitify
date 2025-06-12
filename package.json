@@ -1,16 +1,8 @@
 {
-    "name": "splitify",
+    "name": "split-smart",
     "version": "0.1.0",
     "private": true,
     "contributors": [
-        {
-            "name": "Abdullah Koyuncu",
-            "email": "wisewebworks@outlook.com"
-        },
-        {
-            "name": "Ahmet Yavuz",
-            "email": "1yavuzahmet@gmail.com"
-        },
         {
             "name": "Zeynep Bahar Yılmaz",
             "email": "ylmzbhr1@gmail.com"
@@ -18,6 +10,14 @@
         {
             "name": "Imren Rahbay",
             "email": "imrenrahbay@gmail.com"
+        },
+        {
+            "name": "Ahmet Yavuz",
+            "email": "1yavuzahmet@gmail.com"
+        },
+        {
+            "name": "Abdullah Koyuncu",
+            "email": "wisewebworks@outlook.com"
         }
     ],
     "scripts": {

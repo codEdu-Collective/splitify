@@ -1,34 +1,138 @@
-## Split Smart App
+# Split Smart
 
-First, run the development server:
+Split Smart is a modern full-stack application designed to simplify cost and responsibility sharing among teams or groups. Built with **Next.js**, it leverages **server actions**, **Convex backend**, and **Clerk** for authentication — offering a seamless and secure user experience.
+
+## 🧑‍🤝‍🧑 Contributors
+
+- **Zeynep Bahar Yılmaz** – [ylmzbhr1@gmail.com](mailto:ylmzbhr1@gmail.com)
+- **İmren Rahbay** – [imrenrahbay@gmail.com](mailto:imrenrahbay@gmail.com)
+- **Ahmet Yavuz** – [1yavuzahmet@gmail.com](mailto:1yavuzahmet@gmail.com)
+- **Abdullah Koyuncu** – [wisewebworks@outlook.com](mailto:wisewebworks@outlook.com)
+
+---
+
+## 🚀 Features
+
+- ✨ Auth and user management via [Clerk](https://clerk.dev/)
+- 📊 Data visualization with [Recharts](https://recharts.org/)
+- 🔁 Background jobs and workflows using [Inngest](https://www.inngest.com/)
+- 📬 Email notifications powered by [Resend](https://resend.com/)
+- ☁️ Real-time database & backend via [Convex](https://convex.dev/)
+- 🎨 Customizable UI with [Tailwind CSS](https://tailwindcss.com/) & Radix UI
+- ✅ Type-safe forms with [React Hook Form](https://react-hook-form.com/) and [Zod](https://zod.dev/)
+- 🌗 Dark mode support via `next-themes`
+
+---
+
+## 🧱 Tech Stack
+
+| Category         | Tools/Libraries                                                                 |
+|------------------|----------------------------------------------------------------------------------|
+| **Framework**    | [Next.js 15](https://nextjs.org/) (with Turbopack)                              |
+| **Database**     | [Convex](https://convex.dev/)                                                   |
+| **Auth**         | [Clerk](https://clerk.dev/)                                                     |
+| **UI**           | Tailwind CSS, Radix UI, Lucide Icons                                            |
+| **Forms & Validations** | React Hook Form, Zod                                                     |
+| **Charts**       | Recharts                                                                       |
+| **Date Handling**| date-fns, react-day-picker                                                      |
+| **Email**        | Resend                                                                          |
+| **Async Events** | Inngest, Svix                                                                   |
+| **Dev Tools**    | Prettier, ESLint, TypeScript, PostCSS                                           |
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/codEdu-Collective/split-smart.git
+cd split-smart
+````
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Set up environment variables
+
+Create a `.env.local` file and define necessary environment variables (Clerk keys, Convex URL, Resend API, etc.):
+
+```
+CONVEX_DEPLOYMENT=
+NEXT_PUBLIC_CONVEX_URL=
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+CLERK_JWT_ISSUER_DOMAIN=
+RESEND_API_KEY=
+GEMINI_API_KEY=
+```
+
+### 4. Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧪 Available Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script          | Description                             |
+| --------------- | --------------------------------------- |
+| `npm run dev`   | Start development server with Turbopack |
+| `npm run build` | Build the project for production        |
+| `npm start`     | Start production server                 |
+| `npm run lint`  | Run ESLint to check for code issues     |
+| `npm run check` | Check formatting with Prettier          |
+| `npm run write` | Auto-format codebase with Prettier      |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Project Structure (Simplified)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+/
+├── app
+├── components
+├── components.json
+├── convex
+├── eslint.config.mjs
+├── hooks
+├── lib
+├── LICENSE
+├── middleware.ts
+├── new-env.d.ts
+├── next.config.ts
+├── next-env.d.ts
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.mjs
+├── public
+├── README.md
+└── tsconfig.json
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📝 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+MIT License © 2025
+Split Smart Team
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🤝 Acknowledgments
+
+Thanks to all open-source libraries, frameworks, and tools that made Split Smart possible — especially:
+
+* [Next.js](https://nextjs.org/)
+* [Clerk](https://clerk.dev/)
+* [Convex](https://convex.dev/)
+* [Resend](https://resend.com/)
+* [Inngest](https://www.inngest.com/)
+

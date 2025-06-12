@@ -20,6 +20,9 @@
             "email": "wisewebworks@outlook.com"
         }
     ],
+    "overrides": {
+        "brace-expansion": "^2.0.2"
+    },
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build",
